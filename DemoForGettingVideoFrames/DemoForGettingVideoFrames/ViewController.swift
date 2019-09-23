@@ -9,6 +9,7 @@
 import UIKit
 import AVKit
 import MobileCoreServices
+import ImageIO
 
 class ViewController: UIViewController {
     
@@ -63,38 +64,38 @@ class ViewController: UIViewController {
                 print(self.images.count)
                 //print(Int(self.framesPerSecond * self.lengthOfGif))
                 if self.images.count == Int(self.framesPerSecond * self.lengthOfGif) {
-                    print("call loop")
-                    DispatchQueue.main.async {
-                        self.setUpLoopImage()
-                    }
+                    CGImage.animatedGif(from: self.images)
                 }
             }
             
         }
-        print("here")
     }
     
-    func setUpLoopImage() {
-        print(1.0 / framesPerSecond)
-        timer = Timer.scheduledTimer(timeInterval: 1.0 / framesPerSecond, target: self, selector: #selector(loopImage), userInfo: nil, repeats: true)
+    func loadGifFromFile() {
+        
     }
     
-    @objc func loopImage() {
-        print("timer start")
-        if imageNumber < Int(self.framesPerSecond * self.lengthOfGif - 1) {
-            
-            self.imageView.image = UIImage(cgImage: self.images[imageNumber])
-            imageNumber += 1
-            print(imageNumber)
-            
-        } else if imageNumber == Int(self.framesPerSecond * self.lengthOfGif - 1) {
-            
-            self.imageView.image = UIImage(cgImage: self.images[imageNumber])
-            imageNumber = 0
-            print(imageNumber)
-            
-        }
-    }
+//    func setUpLoopImage() {
+//        print(1.0 / framesPerSecond)
+//        timer = Timer.scheduledTimer(timeInterval: 1.0 / framesPerSecond, target: self, selector: #selector(loopImage), userInfo: nil, repeats: true)
+//    }
+    
+//    @objc func loopImage() {
+//        print("timer start")
+//        if imageNumber < Int(self.framesPerSecond * self.lengthOfGif - 1) {
+//
+//            self.imageView.image = UIImage(cgImage: self.images[imageNumber])
+//            imageNumber += 1
+//            print(imageNumber)
+//
+//        } else if imageNumber == Int(self.framesPerSecond * self.lengthOfGif - 1) {
+//
+//            self.imageView.image = UIImage(cgImage: self.images[imageNumber])
+//            imageNumber = 0
+//            print(imageNumber)
+//
+//        }
+//    }
     
 }
 
@@ -105,14 +106,34 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
         dismiss(animated: true) {
             self.assetURL = url
             self.generateImages()
-//            let player = AVPlayer(url: url)
-//            let vcPlayer = AVPlayerViewController()
-//            vcPlayer.player = player
-//            self.present(vcPlayer, animated: true, completion: nil)
         }
     }
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         
     }
 
+}
+
+extension CGImage {
+    static func animatedGif(from images: [CGImage]) {
+        let fileProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [kCGImagePropertyGIFLoopCount as String: 0]]  as CFDictionary
+        let frameProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [(kCGImagePropertyGIFDelayTime as String): 1.0]] as CFDictionary
+        
+        let documentsDirectoryURL: URL? = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+        let uuid = UUID().uuidString
+        let fileURL: URL? = documentsDirectoryURL?.appendingPathComponent(uuid).appendingPathComponent("animated.gif")
+        
+        if let url = fileURL as CFURL? {
+            if let destination = CGImageDestinationCreateWithURL(url, kUTTypeGIF, images.count, nil) {
+                CGImageDestinationSetProperties(destination, fileProperties)
+                for image in images {
+                    CGImageDestinationAddImage(destination, image, frameProperties)
+                }
+                if !CGImageDestinationFinalize(destination) {
+                    print("Failed to finalize the image destination")
+                }
+                print("Url = \(fileURL)")
+            }
+        }
+    }
 }
