@@ -12,13 +12,14 @@ import MobileCoreServices
 
 class ViewController: UIViewController {
     
-    let framesPerSecond = 5
+    @IBOutlet weak var imageView: UIImageView!
     
-    var lengthOfGif = 3
-    
+    let framesPerSecond = 5.0
+    var lengthOfGif = 3.0
     var assetURL: URL?
-    
     var images: [CGImage] = []
+    var timer: Timer?
+    var imageNumber = 0
     
     var imagePicker: UIImagePickerController {
         let imagePicker = UIImagePickerController()
@@ -33,6 +34,11 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        timer?.invalidate()
+    }
 
     @IBAction func addNewVideoTapped(_ sender: Any) {
         self.present(imagePicker, animated: true)
@@ -43,8 +49,8 @@ class ViewController: UIViewController {
         let avAssetImageGenerator = AVAssetImageGenerator(asset: AVAsset(url: assetURL))
         var times: [CMTime] = []
         
-        for i in 1...(framesPerSecond * lengthOfGif) {
-            let cmTime = CMTime(value: CMTimeValue(30 / framesPerSecond * i), timescale: 30)
+        for i in 1...Int(framesPerSecond * lengthOfGif) {
+            let cmTime = CMTime(value: CMTimeValue(30.0 / framesPerSecond * Double(i)), timescale: 30)
             times.append(cmTime)
         }
         
@@ -55,7 +61,37 @@ class ViewController: UIViewController {
             if let image = image {
                 self.images.append(image)
                 print(self.images.count)
+                //print(Int(self.framesPerSecond * self.lengthOfGif))
+                if self.images.count == Int(self.framesPerSecond * self.lengthOfGif) {
+                    print("call loop")
+                    DispatchQueue.main.async {
+                        self.setUpLoopImage()
+                    }
+                }
             }
+            
+        }
+        print("here")
+    }
+    
+    func setUpLoopImage() {
+        print(1.0 / framesPerSecond)
+        timer = Timer.scheduledTimer(timeInterval: 1.0 / framesPerSecond, target: self, selector: #selector(loopImage), userInfo: nil, repeats: true)
+    }
+    
+    @objc func loopImage() {
+        print("timer start")
+        if imageNumber < Int(self.framesPerSecond * self.lengthOfGif - 1) {
+            
+            self.imageView.image = UIImage(cgImage: self.images[imageNumber])
+            imageNumber += 1
+            print(imageNumber)
+            
+        } else if imageNumber == Int(self.framesPerSecond * self.lengthOfGif - 1) {
+            
+            self.imageView.image = UIImage(cgImage: self.images[imageNumber])
+            imageNumber = 0
+            print(imageNumber)
             
         }
     }
