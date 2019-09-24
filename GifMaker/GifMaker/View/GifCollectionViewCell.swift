@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftyGif
 
 class GifCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
@@ -14,8 +15,11 @@ class GifCollectionViewCell: UICollectionViewCell {
     var gif: Gif?
     
     private func updateViews() {
-        guard let gif = gif else { return }
+        guard let gif = gif, let appendingURL = gif.appendingURL else { return }
+        guard let documentsDirectoryURL: URL = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else { return }
         
+        let fileURL: URL = documentsDirectoryURL.appendingPathComponent("\(appendingURL)animated.gif")
+        imageView.setGifFromURL(fileURL)
     }
     
 }
