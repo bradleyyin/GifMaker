@@ -10,6 +10,7 @@ import UIKit
 import AVKit
 import MobileCoreServices
 import ImageIO
+import SwiftyGif
 
 class ViewController: UIViewController {
     
@@ -64,15 +65,15 @@ class ViewController: UIViewController {
                 print(self.images.count)
                 //print(Int(self.framesPerSecond * self.lengthOfGif))
                 if self.images.count == Int(self.framesPerSecond * self.lengthOfGif) {
-                    CGImage.animatedGif(from: self.images)
+                    let fileURL = CGImage.animatedGif(from: self.images, fps: self.framesPerSecond)
+                    print(fileURL)
+                    DispatchQueue.main.async {
+                        self.imageView.setGifFromURL(fileURL!)
+                    }
                 }
             }
             
         }
-    }
-    
-    func loadGifFromFile() {
-        
     }
     
 //    func setUpLoopImage() {
@@ -115,13 +116,13 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
 }
 
 extension CGImage {
-    static func animatedGif(from images: [CGImage]) {
+    static func animatedGif(from images: [CGImage], fps: Double) -> URL? {
         let fileProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [kCGImagePropertyGIFLoopCount as String: 0]]  as CFDictionary
-        let frameProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [(kCGImagePropertyGIFDelayTime as String): 1.0]] as CFDictionary
+        let frameProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [(kCGImagePropertyGIFDelayTime as String): 1.0 / fps]] as CFDictionary
         
         let documentsDirectoryURL: URL? = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
         let uuid = UUID().uuidString
-        let fileURL: URL? = documentsDirectoryURL?.appendingPathComponent(uuid).appendingPathComponent("animated.gif")
+        let fileURL: URL? = documentsDirectoryURL?.appendingPathComponent("\(uuid)animated.gif")
         
         if let url = fileURL as CFURL? {
             if let destination = CGImageDestinationCreateWithURL(url, kUTTypeGIF, images.count, nil) {
@@ -133,7 +134,10 @@ extension CGImage {
                     print("Failed to finalize the image destination")
                 }
                 print("Url = \(fileURL)")
+                return fileURL
             }
         }
+        return nil
     }
 }
+
