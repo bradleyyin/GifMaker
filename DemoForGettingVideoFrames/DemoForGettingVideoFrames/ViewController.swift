@@ -16,18 +16,20 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var imageView: UIImageView!
     
-    let framesPerSecond = 5.0
+    let framesPerSecond = 15.0
     var lengthOfGif = 3.0
     var assetURL: URL?
-    var images: [CGImage] = []
+    
     var timer: Timer?
-    var imageNumber = 0
+    
+    
     
     var imagePicker: UIImagePickerController {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         imagePicker.allowsEditing = true
         imagePicker.sourceType = .savedPhotosAlbum
+        imagePicker.videoMaximumDuration = 10
         imagePicker.mediaTypes = ["public.movie"]
         return imagePicker
     }
@@ -48,54 +50,78 @@ class ViewController: UIViewController {
     
     func generateImages() {
         guard let assetURL = assetURL else { return }
-        let avAssetImageGenerator = AVAssetImageGenerator(asset: AVAsset(url: assetURL))
-        var times: [CMTime] = []
-        
+        let asset = AVAsset(url: assetURL)
+        let videoLength = asset.duration.seconds
+        lengthOfGif = videoLength
+        print("length: \(videoLength), \(lengthOfGif)")
+        let avAssetImageGenerator = AVAssetImageGenerator(asset: asset)
+        avAssetImageGenerator.requestedTimeToleranceAfter = .zero
+        avAssetImageGenerator.requestedTimeToleranceBefore = .zero
+        var times: [NSValue] = []
+        var lastTime: CMTime = CMTime.zero
+        var images: [CGImage] = []
+
         for i in 1...Int(framesPerSecond * lengthOfGif) {
-            let cmTime = CMTime(value: CMTimeValue(30.0 / framesPerSecond * Double(i)), timescale: 30)
-            times.append(cmTime)
+            let cmTime = CMTime(value: CMTimeValue(60.0 / framesPerSecond * Double(i)), timescale: 60)
+            let value = NSValue(time: cmTime)
+            times.append(value)
+            lastTime = cmTime
+            print("time \(i)")
         }
+        print("all time done")
         
-        avAssetImageGenerator.generateCGImagesAsynchronously(forTimes: times as [NSValue]) { (requestedTime, image, actualTime, result, error) in
-            if let error = error {
-                print("Error generating image: \(error)")
-            }
-            if let image = image {
-                self.images.append(image)
-                print(self.images.count)
-                //print(Int(self.framesPerSecond * self.lengthOfGif))
-                if self.images.count == Int(self.framesPerSecond * self.lengthOfGif) {
-                    let fileURL = CGImage.animatedGif(from: self.images, fps: self.framesPerSecond)
-                    print(fileURL)
-                    DispatchQueue.main.async {
-                        self.imageView.setGifFromURL(fileURL!)
+        DispatchQueue.global().async {
+            avAssetImageGenerator.generateCGImagesAsynchronously(forTimes: times) { (requestedTime, image, actualTime, result, error) in
+                if let error = error {
+                    print("Error generating image: \(error)")
+                    return
+                }
+                
+                print("RequestedTime: \(requestedTime)")
+                
+                
+                if let image = image {
+                    images.append(image)
+                    print(images.count)
+                    if requestedTime == lastTime {
+                        // last frame, finish
+                        print("We finished!!!")
+                        let fileURL = CGImage.animatedGif(from: images, fps: self.framesPerSecond)
+                        print(fileURL)
+                        guard let url = fileURL else { return }
+                        DispatchQueue.main.async {
+                            self.imageView.setGifFromURL(url)
+                            //self.setUpLoopImage(images: images)
+                        }
                     }
                 }
+                
             }
-            
         }
+
+
+        
     }
     
-//    func setUpLoopImage() {
+//    func setUpLoopImage(images: [CGImage]) {
 //        print(1.0 / framesPerSecond)
-//        timer = Timer.scheduledTimer(timeInterval: 1.0 / framesPerSecond, target: self, selector: #selector(loopImage), userInfo: nil, repeats: true)
-//    }
-    
-//    @objc func loopImage() {
-//        print("timer start")
-//        if imageNumber < Int(self.framesPerSecond * self.lengthOfGif - 1) {
+//        var imageNumber = 0
+//        timer = Timer.scheduledTimer(withTimeInterval: 1.0 / framesPerSecond, repeats: true, block: { _ in
+//            print("timer start")
+//            if imageNumber < Int(self.framesPerSecond * self.lengthOfGif - 1) {
 //
-//            self.imageView.image = UIImage(cgImage: self.images[imageNumber])
-//            imageNumber += 1
-//            print(imageNumber)
+//                self.imageView.image = UIImage(cgImage: images[imageNumber])
+//                imageNumber += 1
+//                print(imageNumber)
 //
-//        } else if imageNumber == Int(self.framesPerSecond * self.lengthOfGif - 1) {
+//            } else if imageNumber == Int(self.framesPerSecond * self.lengthOfGif - 1) {
 //
-//            self.imageView.image = UIImage(cgImage: self.images[imageNumber])
-//            imageNumber = 0
-//            print(imageNumber)
+//                self.imageView.image = UIImage(cgImage: images[imageNumber])
+//                imageNumber = 0
+//                print(imageNumber)
 //
-//        }
+//            }
+//        })
 //    }
     
 }
@@ -118,7 +144,7 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
 extension CGImage {
     static func animatedGif(from images: [CGImage], fps: Double) -> URL? {
         let fileProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [kCGImagePropertyGIFLoopCount as String: 0]]  as CFDictionary
-        let frameProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [(kCGImagePropertyGIFDelayTime as String): 1.0 / fps]] as CFDictionary
+        let frameProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [(kCGImagePropertyGIFDelayTime as String): (1.0 / fps)]] as CFDictionary
         
         let documentsDirectoryURL: URL? = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
         let uuid = UUID().uuidString
