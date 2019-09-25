@@ -11,15 +11,23 @@ import SwiftyGif
 
 class GifCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
     
-    var gif: Gif?
+    var gif: Gif? {
+        didSet {
+            updateViews()
+        }
+    }
     
     private func updateViews() {
         guard let gif = gif, let appendingURL = gif.appendingURL else { return }
-        guard let documentsDirectoryURL: URL = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else { return }
-        
-        let fileURL: URL = documentsDirectoryURL.appendingPathComponent("\(appendingURL)animated.gif")
+        guard let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        print("making cell")
+        print(dir)
+        let fileURL: URL = dir.appendingPathComponent("\(appendingURL)")
         imageView.setGifFromURL(fileURL)
+        nameLabel.text = "test"
+        print(gif.appendingURL)
     }
     
 }

@@ -14,7 +14,7 @@ import CoreData
 
 private let reuseIdentifier = "GifCell"
 
-class GifsCollectionViewController: UICollectionViewController {
+class GifsCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     let framesPerSecond = 15.0
     var lengthOfGif = 3.0
@@ -39,20 +39,28 @@ class GifsCollectionViewController: UICollectionViewController {
     
     lazy var fetchedResultsController: NSFetchedResultsController<Gif> = {
         let fetchRequest: NSFetchRequest<Gif> = Gif.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "mood", ascending: false)]
-        
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
+
         let moc = CoreDataStack.shared.mainContext
         let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
-        
+
         frc.delegate = self
-        
+
         try! frc.performFetch()
-        
+
         return frc
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("before reload")
+        collectionView.reloadData()
+        print("reload")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        collectionView.reloadData()
     }
 
     // MARK: UICollectionViewDataSource
@@ -65,6 +73,7 @@ class GifsCollectionViewController: UICollectionViewController {
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
+        print(fetchedResultsController.fetchedObjects?.count)
         return fetchedResultsController.fetchedObjects?.count ?? 0
     }
 
@@ -74,10 +83,15 @@ class GifsCollectionViewController: UICollectionViewController {
         }
         
         let gif = fetchedResultsController.object(at: indexPath)
-        
+        cell.gif = gif
     
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 200, height: 200)
+    }
+    
 
     // MARK: UICollectionViewDelegate
 
@@ -192,7 +206,7 @@ extension GifsCollectionViewController: UIImagePickerControllerDelegate, UINavig
         }
     }
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        
+        dismiss(animated: true, completion: nil)
     }
     
 }

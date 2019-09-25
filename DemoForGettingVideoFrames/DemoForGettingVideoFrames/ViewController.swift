@@ -36,7 +36,14 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadGif()
         // Do any additional setup after loading the view.
+    }
+    
+    func loadGif() {
+        guard let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        let url = dir.appendingPathComponent("4E53F0DC-C1EE-46EE-9A52-B7A6429A1410animated.gif")
+        imageView.setGifFromURL(url)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
