@@ -17,15 +17,8 @@ private let reuseIdentifier = "GifCell"
 class GifsCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     let framesPerSecond = 15.0
-    var lengthOfGif = 3.0
-    var assetURL: URL?
-    
-    var timer: Timer?
     
     let gifController = GifController()
-    
-    var blockOperations: [BlockOperation] = []
-    var shouldReloadCollectionView = false
     
     var imagePicker: UIImagePickerController {
         let imagePicker = UIImagePickerController()
@@ -36,26 +29,10 @@ class GifsCollectionViewController: UICollectionViewController, UICollectionView
         imagePicker.mediaTypes = ["public.movie"]
         return imagePicker
     }
-    
-//    lazy var fetchedResultsController: NSFetchedResultsController<Gif> = {
-//        let fetchRequest: NSFetchRequest<Gif> = Gif.fetchRequest()
-//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
-//
-//        let moc = CoreDataStack.shared.mainContext
-//        let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
-//
-//        frc.delegate = self
-//
-//        try! frc.performFetch()
-//
-//        return frc
-//    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("before reload")
         collectionView.reloadData()
-        print("reload")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -86,49 +63,6 @@ class GifsCollectionViewController: UICollectionViewController, UICollectionView
     
         return cell
     }
-    
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        return CGSize(width: 100, height: 100)
-//    }
-    
-
-    // MARK: UICollectionViewDelegate
-
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-    
-    }
-    */
-    
-    deinit {
-        for operation: BlockOperation in blockOperations {
-            operation.cancel()
-        }
-        blockOperations.removeAll(keepingCapacity: false)
-    }
 
 }
 
@@ -138,12 +72,28 @@ extension GifsCollectionViewController {
         self.present(imagePicker, animated: true)
     }
     
-    func generateImages() {
-        guard let assetURL = assetURL else { return }
-        let asset = AVAsset(url: assetURL)
+    func generateGif(url: URL, completion: @escaping () -> Void) {
+        let images = generateImages(url: url)
+        generateGifFromImages(images: images, completion: {
+            completion()
+        })
+    }
+    
+    func generateGifFromImages(images: [CGImage], completion: @escaping () -> Void) {
+        
+        let fileURL = CGImage.animatedGif(from: images, fps: self.framesPerSecond)
+        print(fileURL)
+        guard let url = fileURL else { return }
+        DispatchQueue.main.async {
+            self.gifController.createNewGif(name: "", fileURL: url,completion: {
+                completion()
+            })
+        }
+    }
+    
+    func generateImages(url: URL) -> [CGImage] {
+        let asset = AVAsset(url: url)
         let videoLength = asset.duration.seconds
-        lengthOfGif = videoLength
-        print("length: \(videoLength), \(lengthOfGif)")
         let avAssetImageGenerator = AVAssetImageGenerator(asset: asset)
         avAssetImageGenerator.requestedTimeToleranceAfter = .zero
         avAssetImageGenerator.requestedTimeToleranceBefore = .zero
@@ -151,50 +101,35 @@ extension GifsCollectionViewController {
         var times: [NSValue] = []
         var lastTime: CMTime = CMTime.zero
         var images: [CGImage] = []
+        var done = false
         
-        for i in 1...Int(framesPerSecond * lengthOfGif) {
+        for i in 1...Int(framesPerSecond * videoLength) {
             let cmTime = CMTime(value: CMTimeValue(60.0 / framesPerSecond * Double(i)), timescale: 60)
             let value = NSValue(time: cmTime)
             times.append(value)
             lastTime = cmTime
-            print("time \(i)")
         }
-        print("all time done")
-        
         DispatchQueue.global().async {
             avAssetImageGenerator.generateCGImagesAsynchronously(forTimes: times) { (requestedTime, image, actualTime, result, error) in
                 if let error = error {
                     print("Error generating image: \(error)")
                     return
                 }
-                
-                print("RequestedTime: \(requestedTime)")
-                
-                
                 if let image = image {
                     images.append(image)
                     print(images.count)
                     if requestedTime == lastTime {
                         // last frame, finish
                         print("We finished!!!")
-                        let fileURL = CGImage.animatedGif(from: images, fps: self.framesPerSecond)
-                        print(fileURL)
-                        guard let url = fileURL else { return }
-                        DispatchQueue.main.async {
-                            //self.imageView.setGifFromURL(url)
-                            //self.setUpLoopImage(images: images)
-                            self.gifController.createNewGif(name: "", fileURL: url,completion: {
-                                self.collectionView.reloadData()
-                            })
-                        }
+                       done = true
                     }
                 }
-                
             }
         }
-        
-        
-        
+        while done == false {
+            //wait
+        }
+        return images
     }
     
 }
@@ -203,8 +138,9 @@ extension GifsCollectionViewController: UIImagePickerControllerDelegate, UINavig
         guard let url = info[.mediaURL] as? URL else { return }
         
         dismiss(animated: true) {
-            self.assetURL = url
-            self.generateImages()
+            self.generateGif(url: url,completion: {
+                self.collectionView.reloadData()
+            })
         }
     }
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

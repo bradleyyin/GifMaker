@@ -64,6 +64,7 @@ class ViewController: UIViewController {
         let avAssetImageGenerator = AVAssetImageGenerator(asset: asset)
         avAssetImageGenerator.requestedTimeToleranceAfter = .zero
         avAssetImageGenerator.requestedTimeToleranceBefore = .zero
+        avAssetImageGenerator.appliesPreferredTrackTransform = true
         var times: [NSValue] = []
         var lastTime: CMTime = CMTime.zero
         var images: [CGImage] = []

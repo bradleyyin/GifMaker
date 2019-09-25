@@ -23,13 +23,24 @@ class GifController {
         completion()
     }
     
-    func loadFromCoreData(context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
+    func loadFromCoreData(context: NSManagedObjectContext = CoreDataStack.shared.mainContext, completion: @escaping () -> Void = {}) {
         let fetchRequest: NSFetchRequest<Gif> = Gif.fetchRequest()
         do {
             let gifs = try context.fetch(fetchRequest)
             self.gifs = gifs
+            completion()
         } catch {
             fatalError("Error loading from Core Data: \(error)")
+        }
+    }
+    
+    func deleteGif(gif: Gif, context: NSManagedObjectContext = CoreDataStack.shared.mainContext, completion: @escaping () -> Void) {
+        context.performAndWait {
+            guard gifs.count > 0, let index = gifs.firstIndex(of: gif) else { return }
+            context.delete(gif)
+            gifs.remove(at: index)
+            saveToPersistence()
+            completion()
         }
     }
 
