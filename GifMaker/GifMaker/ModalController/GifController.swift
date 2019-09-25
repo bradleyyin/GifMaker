@@ -10,27 +10,29 @@ import Foundation
 import CoreData
 
 class GifController {
-//    var gifs: [Gif] = []
-//    
-//    init() {
-//        loadFromCoreData()
-//    }
+    var gifs: [Gif] = []
     
-    func createNewGif(name: String, fileURL: String) {
-        Gif(name: name, url: fileURL)
-        saveToPersistence()
+    init() {
+        loadFromCoreData()
     }
     
-//    func loadFromCoreData(context: NSManagedObjectContext = CoreDataStack.shared.mainContext) -> [Gif] {
-//        let fetchRequest: NSFetchRequest<Gif> = Gif.fetchRequest()
-//        do {
-//            let gifs = try context.fetch(fetchRequest)
-//            return gifs
-//        } catch {
-//            fatalError("Error loading from Core Data: \(error)")
-//        }
-//    }
-//
+    func createNewGif(name: String, fileURL: String, completion: @escaping() -> Void) {
+        let gif = Gif(name: name, url: fileURL)
+        gifs.append(gif)
+        saveToPersistence()
+        completion()
+    }
+    
+    func loadFromCoreData(context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
+        let fetchRequest: NSFetchRequest<Gif> = Gif.fetchRequest()
+        do {
+            let gifs = try context.fetch(fetchRequest)
+            self.gifs = gifs
+        } catch {
+            fatalError("Error loading from Core Data: \(error)")
+        }
+    }
+
     private func saveToPersistence() {
         do {
             try CoreDataStack.shared.mainContext.save()

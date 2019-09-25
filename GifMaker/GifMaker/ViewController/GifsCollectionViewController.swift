@@ -37,19 +37,19 @@ class GifsCollectionViewController: UICollectionViewController, UICollectionView
         return imagePicker
     }
     
-    lazy var fetchedResultsController: NSFetchedResultsController<Gif> = {
-        let fetchRequest: NSFetchRequest<Gif> = Gif.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
-
-        let moc = CoreDataStack.shared.mainContext
-        let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
-
-        frc.delegate = self
-
-        try! frc.performFetch()
-
-        return frc
-    }()
+//    lazy var fetchedResultsController: NSFetchedResultsController<Gif> = {
+//        let fetchRequest: NSFetchRequest<Gif> = Gif.fetchRequest()
+//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
+//
+//        let moc = CoreDataStack.shared.mainContext
+//        let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
+//
+//        frc.delegate = self
+//
+//        try! frc.performFetch()
+//
+//        return frc
+//    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,8 +73,7 @@ class GifsCollectionViewController: UICollectionViewController, UICollectionView
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        print(fetchedResultsController.fetchedObjects?.count)
-        return fetchedResultsController.fetchedObjects?.count ?? 0
+        return gifController.gifs.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -82,14 +81,14 @@ class GifsCollectionViewController: UICollectionViewController, UICollectionView
             fatalError("cannot load gif collection view cell")
         }
         
-        let gif = fetchedResultsController.object(at: indexPath)
+        let gif = gifController.gifs[indexPath.row]
         cell.gif = gif
     
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 200, height: 200)
+        return CGSize(width: 100, height: 100)
     }
     
 
@@ -148,6 +147,7 @@ extension GifsCollectionViewController {
         let avAssetImageGenerator = AVAssetImageGenerator(asset: asset)
         avAssetImageGenerator.requestedTimeToleranceAfter = .zero
         avAssetImageGenerator.requestedTimeToleranceBefore = .zero
+        avAssetImageGenerator.appliesPreferredTrackTransform = true
         var times: [NSValue] = []
         var lastTime: CMTime = CMTime.zero
         var images: [CGImage] = []
@@ -183,7 +183,9 @@ extension GifsCollectionViewController {
                         DispatchQueue.main.async {
                             //self.imageView.setGifFromURL(url)
                             //self.setUpLoopImage(images: images)
-                            self.gifController.createNewGif(name: "", fileURL: url)
+                            self.gifController.createNewGif(name: "", fileURL: url,completion: {
+                                self.collectionView.reloadData()
+                            })
                         }
                     }
                 }
