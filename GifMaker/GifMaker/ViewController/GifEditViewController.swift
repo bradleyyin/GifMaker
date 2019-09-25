@@ -15,12 +15,13 @@ import ImageIO
 class GifEditViewController: UIViewController {
 
     @IBOutlet weak var saveButton: UIButton!
-    @IBOutlet weak var cancelEditButton: UIButton!
+    @IBOutlet weak var addTextButton: UIButton!
     @IBOutlet weak var imageView: UIImageView!
     
     var assetURL: URL?
     let framesPerSecond = 15.0
     var gifController: GifController?
+    var tempGifURL = ""
     //var images: [CGImage]?
     
     override func viewDidLoad() {
@@ -28,8 +29,8 @@ class GifEditViewController: UIViewController {
         print(assetURL)
         guard let url = assetURL else { return }
         generateGif(url: url) {
-            guard let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first, let appendingURL = self.gifController?.gifs.last?.appendingURL else { return }
-            let fileURL: URL = dir.appendingPathComponent("\(appendingURL)")
+            guard let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+            let fileURL: URL = dir.appendingPathComponent("\(self.tempGifURL)")
             self.imageView.setGifFromURL(fileURL)
         }
 
@@ -44,13 +45,14 @@ class GifEditViewController: UIViewController {
     }
     
     func generateGifFromImages(images: [CGImage], completion: @escaping () -> Void) {
-        
-        let fileURL = CGImage.animatedGif(from: images, fps: self.framesPerSecond)
-        print(fileURL)
-        guard let url = fileURL else { return }
+        tempGifURL = CGImage.animatedGif(from: images, fps: self.framesPerSecond) ?? ""
+        print(tempGifURL)
+    }
+    
+    func createAndSaveNewGif() {
         DispatchQueue.main.async {
-            self.gifController?.createNewGif(name: "", fileURL: url,completion: {
-                completion()
+            self.gifController?.createNewGif(name: "", fileURL: self.tempGifURL,completion: {
+                
             })
         }
     }
@@ -100,7 +102,11 @@ class GifEditViewController: UIViewController {
     }
     @IBAction func cancelButtonTapped(_ sender: Any) {
     }
-
+    @IBAction func addTextButtonTapped(_ sender: Any) {
+        let textField = UITextField()
+        imageView.addSubview(textField)
+    }
+    
     
     /*
     // MARK: - Navigation
