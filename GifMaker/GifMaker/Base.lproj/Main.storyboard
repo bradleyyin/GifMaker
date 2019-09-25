@@ -90,28 +90,25 @@
                                 <rect key="frame" x="20" y="188" width="374" height="448"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QMi-cm-eef">
-                                <rect key="frame" x="184" y="685" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <connections>
-                                    <action selector="saveButtonTapped:" destination="ehY-hm-hkf" eventType="touchUpInside" id="cm3-Jr-Df6"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hHu-ri-C0K">
-                                <rect key="frame" x="20" y="44" width="46" height="30"/>
+                                <rect key="frame" x="21" y="44" width="45" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
+                                <state key="normal" title="cancel"/>
                                 <connections>
                                     <action selector="cancelButtonTapped:" destination="ehY-hm-hkf" eventType="touchUpInside" id="MKx-DE-pj9"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Qq-TC-KIE">
-                                <rect key="frame" x="120" y="685" width="46" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Xp-6l-cks">
+                                <rect key="frame" x="179" y="103" width="56" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
+                                <state key="normal" title="add text"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QMi-cm-eef">
+                                <rect key="frame" x="190" y="695" width="34" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Save"/>
                                 <connections>
-                                    <action selector="cancelEditButtonTapped:" destination="ehY-hm-hkf" eventType="touchUpInside" id="6X7-mO-9xP"/>
+                                    <action selector="saveButtonTapped:" destination="ehY-hm-hkf" eventType="touchUpInside" id="cm3-Jr-Df6"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -119,7 +116,6 @@
                         <viewLayoutGuide key="safeArea" id="yZt-az-4GU"/>
                     </view>
                     <connections>
-                        <outlet property="cancelEditButton" destination="4Qq-TC-KIE" id="XKa-vP-gsm"/>
                         <outlet property="imageView" destination="7He-ss-HQA" id="Akw-zg-RfZ"/>
                         <outlet property="saveButton" destination="QMi-cm-eef" id="fUy-zL-0ua"/>
                     </connections>
