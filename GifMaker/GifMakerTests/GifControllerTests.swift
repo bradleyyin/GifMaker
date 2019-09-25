@@ -11,6 +11,10 @@ import XCTest
 @testable import GifMaker
 
 class GifControllerTests: XCTestCase {
+    func testInitRunsLoadData() {
+        let gifController = GifController()
+        XCTAssertTrue(gifController.dataLoaded)
+    }
     func testCreateNewGif() {
         let gifController = GifController()
         gifController.gifs = []

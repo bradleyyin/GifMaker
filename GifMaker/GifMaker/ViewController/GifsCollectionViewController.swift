@@ -19,6 +19,7 @@ class GifsCollectionViewController: UICollectionViewController, UICollectionView
     let framesPerSecond = 15.0
     
     let gifController = GifController()
+    var assetURL: URL?
     
     var imagePicker: UIImagePickerController {
         let imagePicker = UIImagePickerController()
@@ -62,6 +63,13 @@ class GifsCollectionViewController: UICollectionViewController, UICollectionView
         cell.gif = gif
     
         return cell
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ToGifEdit" {
+            guard let gifEditVC = segue.destination as? GifEditViewController else { return }
+            gifEditVC.assetURL = assetURL
+        }
     }
 
 }
@@ -138,9 +146,8 @@ extension GifsCollectionViewController: UIImagePickerControllerDelegate, UINavig
         guard let url = info[.mediaURL] as? URL else { return }
         
         dismiss(animated: true) {
-            self.generateGif(url: url,completion: {
-                self.collectionView.reloadData()
-            })
+            self.assetURL = url
+            self.performSegue(withIdentifier: "ToGifEdit", sender: self)
         }
     }
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

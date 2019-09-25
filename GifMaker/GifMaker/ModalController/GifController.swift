@@ -11,6 +11,7 @@ import CoreData
 
 class GifController {
     var gifs: [Gif] = []
+    var dataLoaded = false
     
     init() {
         loadFromCoreData()
@@ -28,6 +29,7 @@ class GifController {
         do {
             let gifs = try context.fetch(fetchRequest)
             self.gifs = gifs
+            dataLoaded = true
             completion()
         } catch {
             fatalError("Error loading from Core Data: \(error)")
