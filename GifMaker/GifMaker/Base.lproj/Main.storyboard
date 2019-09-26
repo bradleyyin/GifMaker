@@ -32,24 +32,36 @@
                                     <rect key="frame" x="0.0" y="0.0" width="183" height="142"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="pwp-2w-Za1">
-                                            <rect key="frame" x="18" y="10" width="147" height="114"/>
-                                        </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kgl-HH-OgF">
-                                            <rect key="frame" x="70.5" y="121" width="42" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aFW-et-FBj">
+                                            <rect key="frame" x="0.0" y="0.0" width="183" height="142"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="pwp-2w-Za1">
+                                                    <rect key="frame" x="8" y="0.0" width="167" height="116"/>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kgl-HH-OgF">
+                                                    <rect key="frame" x="70.5" y="121" width="42" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="pwp-2w-Za1" firstAttribute="top" secondItem="aFW-et-FBj" secondAttribute="top" id="3WF-et-5uW"/>
+                                                <constraint firstAttribute="bottom" secondItem="kgl-HH-OgF" secondAttribute="bottom" id="bGp-yD-dWl"/>
+                                                <constraint firstItem="pwp-2w-Za1" firstAttribute="leading" secondItem="aFW-et-FBj" secondAttribute="leadingMargin" id="eNv-xS-cso"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="pwp-2w-Za1" secondAttribute="bottom" constant="18" id="jEu-BW-mqg"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="pwp-2w-Za1" secondAttribute="trailing" id="p8q-o8-EgA"/>
+                                                <constraint firstItem="kgl-HH-OgF" firstAttribute="centerX" secondItem="aFW-et-FBj" secondAttribute="centerX" id="qmG-ba-3yU"/>
+                                            </constraints>
+                                        </view>
                                     </subviews>
                                 </view>
                                 <constraints>
-                                    <constraint firstAttribute="trailingMargin" secondItem="pwp-2w-Za1" secondAttribute="trailing" constant="10" id="BxL-AW-61U"/>
-                                    <constraint firstItem="pwp-2w-Za1" firstAttribute="leading" secondItem="BOj-3H-9eu" secondAttribute="leadingMargin" constant="10" id="U1H-bx-gcf"/>
-                                    <constraint firstItem="kgl-HH-OgF" firstAttribute="centerX" secondItem="BOj-3H-9eu" secondAttribute="centerX" id="cH9-Gf-boP"/>
-                                    <constraint firstAttribute="bottomMargin" secondItem="pwp-2w-Za1" secondAttribute="bottom" constant="10" id="h8j-78-eKl"/>
-                                    <constraint firstAttribute="bottom" secondItem="kgl-HH-OgF" secondAttribute="bottom" id="hFW-Eo-Se7"/>
-                                    <constraint firstItem="pwp-2w-Za1" firstAttribute="top" secondItem="BOj-3H-9eu" secondAttribute="top" constant="10" id="nzx-zU-RaF"/>
+                                    <constraint firstItem="aFW-et-FBj" firstAttribute="leading" secondItem="BOj-3H-9eu" secondAttribute="leading" id="1ga-BD-OFE"/>
+                                    <constraint firstAttribute="bottom" secondItem="aFW-et-FBj" secondAttribute="bottom" id="3Vz-pV-2dI"/>
+                                    <constraint firstItem="aFW-et-FBj" firstAttribute="top" secondItem="BOj-3H-9eu" secondAttribute="top" id="HBa-XR-jY3"/>
+                                    <constraint firstAttribute="trailing" secondItem="aFW-et-FBj" secondAttribute="trailing" id="kop-As-cDq"/>
                                 </constraints>
                                 <connections>
                                     <outlet property="imageView" destination="pwp-2w-Za1" id="ugS-pP-FfG"/>

@@ -23,11 +23,12 @@ class GifEditViewController: UIViewController {
     weak var imageTextField: UITextField!
     
     var assetURL: URL?
-    let framesPerSecond = 15.0
+    let framesPerSecond = 5.0
     var gifController: GifController?
     var tempGifURL = ""
     var textFieldOrigin : CGPoint = CGPoint(x: 100, y: 100)
     var finalTextFieldPoint: CGPoint = CGPoint.zero
+    var fontSize: CGFloat = 50
     
     var images: [CGImage]?
     
@@ -147,7 +148,7 @@ class GifEditViewController: UIViewController {
         textField.delegate = self
         let gesture = UIPanGestureRecognizer(target: self, action: #selector(textFieldDrag(pan:)))
         textField.addGestureRecognizer(gesture)
-        textField.font = UIFont(name: "Helvetica", size: 50)
+        textField.font = UIFont(name: "Helvetica", size: fontSize)
         self.imageTextField = textField
         canvasView.addSubview(textField)
     }
@@ -158,12 +159,14 @@ class GifEditViewController: UIViewController {
             print("panIF")
             textFieldOrigin = pan.location(in: imageTextField)
             print(textFieldOrigin)
-        }else {
+        }else if pan.state == .changed || pan.state == .ended {
             print("panELSE")
             let location = pan.location(in: canvasView) // get pan location
             imageTextField.frame.origin = CGPoint(x: location.x - textFieldOrigin.x, y: location.y - textFieldOrigin.y)
             finalTextFieldPoint = imageTextField.frame.origin
             print(finalTextFieldPoint)
+        } else {
+            //TODO: handle other state condition
         }
     }
 
@@ -171,11 +174,22 @@ class GifEditViewController: UIViewController {
 
         // Setup the font specific variables
         let textColor = UIColor.black
-        let textFont = UIFont(name: "Helvetica", size: 50)!
+        let textFont = UIFont(name: "Helvetica", size: fontSize * 2)!
+        
+        //calculate points
+        
+        let newX = atPoint.x * inImage.size.width / self.imageView.frame.width
+        let newY = atPoint.y * inImage.size.height / self.imageView.frame.height
+        let newPoint = CGPoint(x: newX, y: newY)
+        print("new point", newPoint)
+        print("original point", atPoint)
+        print("imageview size", imageView.frame.size)
+        print("image size", inImage.size)
+        
 
         // Setup the image context using the passed image
-        let scale = UIScreen.main.scale
-        UIGraphicsBeginImageContextWithOptions(inImage.size, false, scale)
+        //let scale = UIScreen.main.scale
+        UIGraphicsBeginImageContextWithOptions(inImage.size, false, 1)
 
         // Setup the font attributes that will be later used to dictate how the text should be drawn
         let textFontAttributes = [
@@ -187,7 +201,7 @@ class GifEditViewController: UIViewController {
         inImage.draw(in: CGRect(origin: CGPoint.zero, size: inImage.size))
 
         // Create a point within the space that is as bit as the image
-        let rect = CGRect(origin: atPoint, size: inImage.size)
+        let rect = CGRect(origin: newPoint, size: inImage.size)
 
         // Draw the text into an image
         drawText.draw(in: rect, withAttributes: textFontAttributes)
@@ -203,13 +217,21 @@ class GifEditViewController: UIViewController {
         return newCGImage
 
     }
+    
+//    func drawImage() {
+//        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 512, height: 512))
+//        renderer.image { (context) in
+//
+//        }
+//
+//    }
 
     func generateGifWithText(completion: @escaping () -> Void) {
         guard let images = images, let text = imageTextField.text else { return }
         var newImages: [CGImage] = []
         for image in images {
             let uiImage = UIImage(cgImage: image)
-            guard let imageWithText = textToImage(drawText: text as NSString, inImage: uiImage, atPoint: CGPoint(x: finalTextFieldPoint.x + 20, y: finalTextFieldPoint.y)) else { continue }
+            guard let imageWithText = textToImage(drawText: text as NSString, inImage: uiImage, atPoint: CGPoint(x: finalTextFieldPoint.x, y: finalTextFieldPoint.y)) else { continue }
             newImages.append(imageWithText)
         }
         generateGifFromImages(images: newImages) { url in

@@ -104,7 +104,9 @@ class GifsCollectionViewController: UICollectionViewController, UICollectionView
                     print(error.localizedDescription)
                 } else {
                     print("GIF has saved")
-                    self.showSucessfulSavedAlert()
+                    DispatchQueue.main.async {
+                        self.showSucessfulSavedAlert()
+                    }
                 }
             }
         }
