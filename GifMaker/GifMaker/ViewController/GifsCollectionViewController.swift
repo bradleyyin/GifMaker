@@ -11,6 +11,7 @@ import AVKit
 import MobileCoreServices
 import ImageIO
 import CoreData
+import Photos
 
 private let reuseIdentifier = "GifCell"
 
@@ -59,10 +60,17 @@ class GifsCollectionViewController: UICollectionViewController, UICollectionView
             fatalError("cannot load gif collection view cell")
         }
         
-        let gif = gifController.gifs[indexPath.row]
+        let gif = gifController.gifs[indexPath.item]
         cell.gif = gif
     
         return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let gif = gifController.gifs[indexPath.item]
+        print("select \(indexPath.item)")
+        showSelectionSheet(gif: gif)
+        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -71,6 +79,47 @@ class GifsCollectionViewController: UICollectionViewController, UICollectionView
             gifEditVC.assetURL = assetURL
             gifEditVC.gifController = gifController
         }
+    }
+    
+    private func showSelectionSheet(gif: Gif) {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (action) in
+            self.gifController.deleteGif(gif: gif, completion: {
+                self.collectionView.reloadData()
+            })
+            
+        }
+        alertController.addAction(deleteAction)
+        
+        let saveToLibraryAction = UIAlertAction(title: "Save to library", style: .default) { (action) in
+            //save to library
+            PHPhotoLibrary.shared().performChanges({
+                let request = PHAssetCreationRequest.forAsset()
+                guard let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first, let url = gif.appendingURL else { return }
+                
+                let fileURL: URL = dir.appendingPathComponent("\(url)")
+                request.addResource(with: .photo, fileURL: fileURL, options: nil)
+            }) { (success, error) in
+                if let error = error {
+                    print(error.localizedDescription)
+                } else {
+                    print("GIF has saved")
+                    self.showSucessfulSavedAlert()
+                }
+            }
+        }
+        alertController.addAction(saveToLibraryAction)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true)
+    }
+    
+    private func showSucessfulSavedAlert() {
+        let alertController = UIAlertController(title: "gif sucessfully saved", message: nil, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        present(alertController, animated: true)
     }
 
 }

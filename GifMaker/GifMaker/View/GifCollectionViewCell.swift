@@ -26,7 +26,7 @@ class GifCollectionViewCell: UICollectionViewCell {
         print(dir)
         let fileURL: URL = dir.appendingPathComponent("\(appendingURL)")
         imageView.setGifFromURL(fileURL)
-        nameLabel.text = "test"
+        nameLabel.text = gif.name
     }
     
 }

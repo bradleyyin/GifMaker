@@ -19,24 +19,24 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="l1G-G3-pIJ">
-                            <size key="itemSize" width="187" height="180"/>
+                            <size key="itemSize" width="183" height="142"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="GifCell" id="BOj-3H-9eu" customClass="GifCollectionViewCell" customModule="GifMaker" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="187" height="180"/>
+                                <rect key="frame" x="0.0" y="0.0" width="183" height="142"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                    <rect key="frame" x="0.0" y="0.0" width="187" height="180"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="183" height="142"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="pwp-2w-Za1">
-                                            <rect key="frame" x="18" y="10" width="151" height="152"/>
+                                            <rect key="frame" x="18" y="10" width="147" height="114"/>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kgl-HH-OgF">
-                                            <rect key="frame" x="72" y="159" width="42" height="21"/>
+                                            <rect key="frame" x="70.5" y="121" width="42" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -44,10 +44,9 @@
                                     </subviews>
                                 </view>
                                 <constraints>
-                                    <constraint firstItem="kgl-HH-OgF" firstAttribute="leading" secondItem="BOj-3H-9eu" secondAttribute="leading" constant="72" id="6zh-Lt-Biz"/>
                                     <constraint firstAttribute="trailingMargin" secondItem="pwp-2w-Za1" secondAttribute="trailing" constant="10" id="BxL-AW-61U"/>
-                                    <constraint firstAttribute="trailing" secondItem="kgl-HH-OgF" secondAttribute="trailing" constant="73" id="FcZ-6K-EE8"/>
                                     <constraint firstItem="pwp-2w-Za1" firstAttribute="leading" secondItem="BOj-3H-9eu" secondAttribute="leadingMargin" constant="10" id="U1H-bx-gcf"/>
+                                    <constraint firstItem="kgl-HH-OgF" firstAttribute="centerX" secondItem="BOj-3H-9eu" secondAttribute="centerX" id="cH9-Gf-boP"/>
                                     <constraint firstAttribute="bottomMargin" secondItem="pwp-2w-Za1" secondAttribute="bottom" constant="10" id="h8j-78-eKl"/>
                                     <constraint firstAttribute="bottom" secondItem="kgl-HH-OgF" secondAttribute="bottom" id="hFW-Eo-Se7"/>
                                     <constraint firstItem="pwp-2w-Za1" firstAttribute="top" secondItem="BOj-3H-9eu" secondAttribute="top" constant="10" id="nzx-zU-RaF"/>

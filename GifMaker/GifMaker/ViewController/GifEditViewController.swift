@@ -203,7 +203,7 @@ class GifEditViewController: UIViewController {
 }
 extension GifEditViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.textField.endEditing(true)
+        self.view.endEditing(true)
         return false
     }
 }
