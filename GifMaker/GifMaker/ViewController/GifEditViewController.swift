@@ -106,10 +106,8 @@ class GifEditViewController: UIViewController {
                 }
                 if let image = image {
                     images.append(image)
-                    print(images.count)
                     if requestedTime == lastTime {
                         // last frame, finish
-                        print("We finished!!!")
                         done = true
                     }
                 }
@@ -154,13 +152,10 @@ class GifEditViewController: UIViewController {
     }
     
     @objc func textFieldDrag(pan: UIPanGestureRecognizer) {
-        print("Being Dragged")
         if pan.state == .began {
-            print("panIF")
             textFieldOrigin = pan.location(in: imageTextField)
             print(textFieldOrigin)
         }else if pan.state == .changed || pan.state == .ended {
-            print("panELSE")
             let location = pan.location(in: canvasView) // get pan location
             imageTextField.frame.origin = CGPoint(x: location.x - textFieldOrigin.x, y: location.y - textFieldOrigin.y)
             finalTextFieldPoint = imageTextField.frame.origin
@@ -181,11 +176,6 @@ class GifEditViewController: UIViewController {
         let newX = atPoint.x * inImage.size.width / self.imageView.frame.width
         let newY = atPoint.y * inImage.size.height / self.imageView.frame.height
         let newPoint = CGPoint(x: newX, y: newY)
-        print("new point", newPoint)
-        print("original point", atPoint)
-        print("imageview size", imageView.frame.size)
-        print("image size", inImage.size)
-        
 
         // Setup the image context using the passed image
         //let scale = UIScreen.main.scale

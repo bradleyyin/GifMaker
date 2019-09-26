@@ -68,7 +68,6 @@ class GifsCollectionViewController: UICollectionViewController, UICollectionView
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let gif = gifController.gifs[indexPath.item]
-        print("select \(indexPath.item)")
         showSelectionSheet(gif: gif)
         
     }

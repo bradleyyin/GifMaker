@@ -16,9 +16,6 @@ extension CGImage {
         
         let width = Int(newSize.width)
         let height = Int(newSize.height)
-//        let bitsPerComponent = self.bitsPerComponent
-//        let bytesPerRow = self.bytesPerRow
-//        let bitmapInfo = self.bitmapInfo
         
         guard let context = CGContext(data: nil, width: width, height: height,
                                       bitsPerComponent: bitsPerComponent,
