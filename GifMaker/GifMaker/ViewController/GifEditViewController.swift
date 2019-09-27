@@ -25,7 +25,7 @@ class GifEditViewController: UIViewController {
     var assetURL: URL?
     let framesPerSecond = 5.0
     var gifController: GifController?
-    var tempGifURL = ""
+    var tempGifURL = "" // this is actually a string (and other inheriting types also indicate url when actually string)
     var textFieldOrigin: CGPoint = CGPoint(x: 100, y: 100)
     var finalTextFieldPoint: CGPoint = CGPoint.zero
     var fontSize: CGFloat = 50

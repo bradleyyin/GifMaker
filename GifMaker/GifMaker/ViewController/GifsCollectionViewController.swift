@@ -27,7 +27,7 @@ class GifsCollectionViewController: UICollectionViewController, UICollectionView
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         imagePicker.allowsEditing = true
-        imagePicker.sourceType = .savedPhotosAlbum
+		imagePicker.sourceType = .photoLibrary // this might be better for what you want
         imagePicker.videoMaximumDuration = 10
         imagePicker.mediaTypes = ["public.movie"]
         return imagePicker
@@ -149,8 +149,10 @@ extension GifsCollectionViewController: UIImagePickerControllerDelegate, UINavig
     
 }
 
+// this should probably have its own file instead of sharing with a view controller
 extension CGImage {
     static func animatedGif(from images: [CGImage], fps: Double) -> String? {
+		// probably would want to do this on a background thread. i thought i noticed stuttering at some point.
         let fileProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [kCGImagePropertyGIFLoopCount as String: 0]]  as CFDictionary
         let frameProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [(kCGImagePropertyGIFDelayTime as String): (1.0 / fps)]] as CFDictionary
         
