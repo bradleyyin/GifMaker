@@ -37,6 +37,7 @@ class GifController {
     }
     
     func deleteGif(gif: Gif, context: NSManagedObjectContext = CoreDataStack.shared.mainContext, completion: @escaping () -> Void) {
+		// this doesn't appear to delete the gif on disk, just the core data reference. is that handled elsewhere?
         context.performAndWait {
             guard !gifs.isEmpty, let index = gifs.firstIndex(of: gif) else { return }
             context.delete(gif)
