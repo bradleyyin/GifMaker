@@ -17,9 +17,12 @@ extension CGImage {
         let width = Int(newSize.width)
         let height = Int(newSize.height)
         
-        guard let context = CGContext(data: nil, width: width, height: height,
+        guard let context = CGContext(data: nil,
+                                      width: width,
+                                      height: height,
                                       bitsPerComponent: bitsPerComponent,
-                                      bytesPerRow: bytesPerRow, space: colorSpace,
+                                      bytesPerRow: bytesPerRow,
+                                      space: colorSpace,
                                       bitmapInfo: bitmapInfo.rawValue) else { return nil }
         context.interpolationQuality = .high
         let rect = CGRect(origin: CGPoint.zero, size: newSize)
@@ -28,4 +31,3 @@ extension CGImage {
         return context.makeImage()
     }
 }
-

@@ -1,16 +1,20 @@
 PODS:
+  - SwiftLint (0.33.0)
   - SwiftyGif (5.1.1)
 
 DEPENDENCIES:
+  - SwiftLint
   - SwiftyGif
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - SwiftLint
     - SwiftyGif
 
 SPEC CHECKSUMS:
+  SwiftLint: fed9c66336e41fc74dc48a73678380718f0c8b0e
   SwiftyGif: f7702483db93586a41f04f4927cd682852a2fa10
 
-PODFILE CHECKSUM: e39160fce12971e628405f7d85f4fecafc57ce42
+PODFILE CHECKSUM: efb35c48170f6ab574b17a03b84692d11dc2ddde
 
 COCOAPODS: 1.7.5

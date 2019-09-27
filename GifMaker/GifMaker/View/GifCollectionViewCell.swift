@@ -10,8 +10,8 @@ import UIKit
 import SwiftyGif
 
 class GifCollectionViewCell: UICollectionViewCell {
-    @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet private weak var imageView: UIImageView!
+    @IBOutlet private weak var nameLabel: UILabel!
     
     var gif: Gif? {
         didSet {

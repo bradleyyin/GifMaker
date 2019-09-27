@@ -13,9 +13,6 @@ import XCTest
 class GifCollectionViewControllerTests: XCTestCase {
     func testGifControllerSucessfulInit() {
         let gifCollectionViewController = GifsCollectionViewController()
-        XCTAssertTrue(gifCollectionViewController.gifController.gifs.count >= 0) 
+        XCTAssertTrue(!gifCollectionViewController.gifController.gifs.isEmpty)
     }
-    
-    
-   
 }

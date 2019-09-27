@@ -18,7 +18,7 @@ private let reuseIdentifier = "GifCell"
 class GifsCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     
-    @IBOutlet weak var addButton: UIBarButtonItem!
+    @IBOutlet private weak var addButton: UIBarButtonItem!
     
     let gifController = GifController()
     var assetURL: URL?
@@ -85,7 +85,7 @@ class GifsCollectionViewController: UICollectionViewController, UICollectionView
     
     private func showSelectionSheet(gif: Gif) {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (action) in
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { _ in
             self.gifController.deleteGif(gif: gif, completion: {
                 self.collectionView.reloadData()
             })
@@ -93,7 +93,7 @@ class GifsCollectionViewController: UICollectionViewController, UICollectionView
         }
         alertController.addAction(deleteAction)
         
-        let saveToLibraryAction = UIAlertAction(title: "Save to library", style: .default) { (action) in
+        let saveToLibraryAction = UIAlertAction(title: "Save to library", style: .default) { _ in
             //save to library
             PHPhotoLibrary.shared().performChanges({
                 let request = PHAssetCreationRequest.forAsset()
@@ -101,7 +101,7 @@ class GifsCollectionViewController: UICollectionViewController, UICollectionView
                 
                 let fileURL: URL = dir.appendingPathComponent("\(url)")
                 request.addResource(with: .photo, fileURL: fileURL, options: nil)
-            }) { (success, error) in
+            }, completionHandler: { _, error in
                 if let error = error {
                     print(error.localizedDescription)
                 } else {
@@ -110,7 +110,7 @@ class GifsCollectionViewController: UICollectionViewController, UICollectionView
                         self.showSucessfulSavedAlert()
                     }
                 }
-            }
+            })
         }
         alertController.addAction(saveToLibraryAction)
         let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
@@ -135,7 +135,7 @@ extension GifsCollectionViewController {
     }
 }
 extension GifsCollectionViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         guard let url = info[.mediaURL] as? URL else { return }
         
         dismiss(animated: true) {
@@ -167,11 +167,9 @@ extension CGImage {
                 if !CGImageDestinationFinalize(destination) {
                     print("Failed to finalize the image destination")
                 }
-                print("Url = \(fileURL)")
                 return "\(uuid)animated.gif"
             }
         }
         return nil
     }
 }
-

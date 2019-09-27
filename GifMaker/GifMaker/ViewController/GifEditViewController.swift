@@ -14,11 +14,11 @@ import ImageIO
 
 class GifEditViewController: UIViewController {
 
-    @IBOutlet weak var saveButton: UIButton!
-    @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var textField: UITextField!
-    @IBOutlet weak var addTextButton: UIButton!
-    @IBOutlet weak var canvasView: UIView!
+    @IBOutlet private weak var saveButton: UIButton!
+    @IBOutlet private weak var imageView: UIImageView!
+    @IBOutlet private weak var textField: UITextField!
+    @IBOutlet private weak var addTextButton: UIButton!
+    @IBOutlet private weak var canvasView: UIView!
     
     weak var imageTextField: UITextField!
     
@@ -26,7 +26,7 @@ class GifEditViewController: UIViewController {
     let framesPerSecond = 5.0
     var gifController: GifController?
     var tempGifURL = ""
-    var textFieldOrigin : CGPoint = CGPoint(x: 100, y: 100)
+    var textFieldOrigin: CGPoint = CGPoint(x: 100, y: 100)
     var finalTextFieldPoint: CGPoint = CGPoint.zero
     var fontSize: CGFloat = 50
     
@@ -99,7 +99,7 @@ class GifEditViewController: UIViewController {
             lastTime = cmTime
         }
         DispatchQueue.global().async {
-            avAssetImageGenerator.generateCGImagesAsynchronously(forTimes: times) { (requestedTime, image, actualTime, result, error) in
+            avAssetImageGenerator.generateCGImagesAsynchronously(forTimes: times) { requestedTime, image, _, _, error in
                 if let error = error {
                     print("Error generating image: \(error)")
                     return
@@ -155,7 +155,7 @@ class GifEditViewController: UIViewController {
         if pan.state == .began {
             textFieldOrigin = pan.location(in: imageTextField)
             print(textFieldOrigin)
-        }else if pan.state == .changed || pan.state == .ended {
+        } else if pan.state == .changed || pan.state == .ended {
             let location = pan.location(in: canvasView) // get pan location
             imageTextField.frame.origin = CGPoint(x: location.x - textFieldOrigin.x, y: location.y - textFieldOrigin.y)
             finalTextFieldPoint = imageTextField.frame.origin
@@ -221,7 +221,9 @@ class GifEditViewController: UIViewController {
         var newImages: [CGImage] = []
         for image in images {
             let uiImage = UIImage(cgImage: image)
-            guard let imageWithText = textToImage(drawText: text as NSString, inImage: uiImage, atPoint: CGPoint(x: finalTextFieldPoint.x, y: finalTextFieldPoint.y)) else { continue }
+            guard let imageWithText = textToImage(drawText: text as NSString,
+                                                  inImage: uiImage,
+                                                  atPoint: CGPoint(x: finalTextFieldPoint.x, y: finalTextFieldPoint.y)) else { continue }
             newImages.append(imageWithText)
         }
         generateGifFromImages(images: newImages) { url in
@@ -239,5 +241,3 @@ extension GifEditViewController: UITextFieldDelegate {
         return false
     }
 }
-
-

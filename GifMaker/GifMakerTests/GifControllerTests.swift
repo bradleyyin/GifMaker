@@ -38,13 +38,13 @@ class GifControllerTests: XCTestCase {
         
         wait(for: [didFinish], timeout: 5)
         
-        XCTAssertTrue(gifController.gifs.count > 0)
+        XCTAssertTrue(!gifController.gifs.isEmpty)
     }
     
     func testDeleteGif() {
         let gifController = GifController()
         let didFinish = expectation(description: "didfinish")
-        guard gifController.gifs.count > 0 else { fatalError("Not enough gifs to delete") }
+        guard !gifController.gifs.isEmpty else { fatalError("Not enough gifs to delete") }
         let gifToDelete = gifController.gifs[0]
         let originalGifsCount = gifController.gifs.count
         gifController.deleteGif(gif: gifToDelete) {

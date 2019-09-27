@@ -20,6 +20,8 @@
 		7509BE31233C291A00EEEA09 /* GifEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7509BE30233C291A00EEEA09 /* GifEditViewController.swift */; };
 		7509BE33233D283E00EEEA09 /* GiftEditViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7509BE32233D283E00EEEA09 /* GiftEditViewControllerTests.swift */; };
 		7509BE35233D432400EEEA09 /* CGImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7509BE34233D432400EEEA09 /* CGImage+Resize.swift */; };
+		7509BE39233DB1DA00EEEA09 /* autocorrect.yml in Resources */ = {isa = PBXBuildFile; fileRef = 7509BE37233DB1D900EEEA09 /* autocorrect.yml */; };
+		7509BE3A233DB1DA00EEEA09 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 7509BE38233DB1D900EEEA09 /* .swiftlint.yml */; };
 		75D2E10D23393AAD00A345B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D2E10C23393AAD00A345B6 /* AppDelegate.swift */; };
 		75D2E11223393AAD00A345B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75D2E11023393AAD00A345B6 /* Main.storyboard */; };
 		75D2E11423393AB000A345B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 75D2E11323393AB000A345B6 /* Assets.xcassets */; };
@@ -61,6 +63,8 @@
 		7509BE30233C291A00EEEA09 /* GifEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifEditViewController.swift; sourceTree = "<group>"; };
 		7509BE32233D283E00EEEA09 /* GiftEditViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftEditViewControllerTests.swift; sourceTree = "<group>"; };
 		7509BE34233D432400EEEA09 /* CGImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGImage+Resize.swift"; sourceTree = "<group>"; };
+		7509BE37233DB1D900EEEA09 /* autocorrect.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = autocorrect.yml; sourceTree = "<group>"; };
+		7509BE38233DB1D900EEEA09 /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .swiftlint.yml; sourceTree = "<group>"; };
 		75D2E10923393AAD00A345B6 /* GifMaker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GifMaker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		75D2E10C23393AAD00A345B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		75D2E11123393AAD00A345B6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -165,6 +169,8 @@
 		75D2E10023393AAD00A345B6 = {
 			isa = PBXGroup;
 			children = (
+				7509BE38233DB1D900EEEA09 /* .swiftlint.yml */,
+				7509BE37233DB1D900EEEA09 /* autocorrect.yml */,
 				75D2E10B23393AAD00A345B6 /* GifMaker */,
 				7509BE15233BC59400EEEA09 /* GifMakerUITests */,
 				7509BE23233BC59E00EEEA09 /* GifMakerTests */,
@@ -256,6 +262,7 @@
 				75D2E10623393AAD00A345B6 /* Frameworks */,
 				75D2E10723393AAD00A345B6 /* Resources */,
 				29B77393EBE358B7938F0D96 /* [CP] Embed Pods Frameworks */,
+				7509BE36233DB1B500EEEA09 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -329,8 +336,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7509BE3A233DB1DA00EEEA09 /* .swiftlint.yml in Resources */,
 				75D2E11723393AB000A345B6 /* LaunchScreen.storyboard in Resources */,
 				75D2E11423393AB000A345B6 /* Assets.xcassets in Resources */,
+				7509BE39233DB1DA00EEEA09 /* autocorrect.yml in Resources */,
 				75D2E11223393AAD00A345B6 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -376,6 +385,23 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GifMaker/Pods-GifMaker-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		7509BE36233DB1B500EEEA09 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

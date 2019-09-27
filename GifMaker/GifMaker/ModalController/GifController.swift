@@ -38,7 +38,7 @@ class GifController {
     
     func deleteGif(gif: Gif, context: NSManagedObjectContext = CoreDataStack.shared.mainContext, completion: @escaping () -> Void) {
         context.performAndWait {
-            guard gifs.count > 0, let index = gifs.firstIndex(of: gif) else { return }
+            guard !gifs.isEmpty, let index = gifs.firstIndex(of: gif) else { return }
             context.delete(gif)
             gifs.remove(at: index)
             saveToPersistence()
