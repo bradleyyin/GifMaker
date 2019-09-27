@@ -82,6 +82,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="addButton" destination="afl-VA-Zk7" id="sL4-yj-qKB"/>
                         <segue destination="ehY-hm-hkf" kind="presentation" identifier="ToGifEdit" id="SQI-Pg-894"/>
                     </connections>
                 </collectionViewController>
@@ -102,6 +103,7 @@
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7He-ss-HQA">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="646"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="GifEditViewController.imageView"/>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

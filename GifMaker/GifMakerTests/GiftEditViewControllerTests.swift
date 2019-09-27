@@ -55,4 +55,19 @@ class GiftEditViewControllerTests: XCTestCase {
         wait(for: [didFinished], timeout: 30)
         XCTAssertTrue(gifEditViewController.tempGifURL.contains("animated.gif"))
     }
+    
+    func testDeleteTempURL() {
+        let gifEditViewController = GifEditViewController()
+        gifEditViewController.gifController = GifController()
+        let didFinished = expectation(description: "didFinished")
+        let url = URL(string: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")!
+        gifEditViewController.generateGif(url: url) {
+            gifEditViewController.deleteTempURL()
+            didFinished.fulfill()
+        }
+        wait(for: [didFinished], timeout: 30)
+        guard let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        let tempURL = dir.appendingPathComponent("\(gifEditViewController.tempGifURL)animated.gif").absoluteString
+        XCTAssertTrue(!FileManager.default.fileExists(atPath: tempURL))
+    }
 }

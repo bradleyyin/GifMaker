@@ -18,6 +18,7 @@ private let reuseIdentifier = "GifCell"
 class GifsCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     
+    @IBOutlet weak var addButton: UIBarButtonItem!
     
     let gifController = GifController()
     var assetURL: URL?
@@ -35,6 +36,8 @@ class GifsCollectionViewController: UICollectionViewController, UICollectionView
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.reloadData()
+        collectionView.accessibilityIdentifier = "GifsCollectionViewController.collectionView"
+        addButton.accessibilityIdentifier = "GifsCollectionViewController.addButton"
     }
     
     override func viewWillAppear(_ animated: Bool) {
