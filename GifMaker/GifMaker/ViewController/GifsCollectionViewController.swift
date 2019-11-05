@@ -27,7 +27,7 @@ class GifsCollectionViewController: UICollectionViewController, UICollectionView
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         imagePicker.allowsEditing = true
-        imagePicker.sourceType = .savedPhotosAlbum
+        imagePicker.sourceType = .photoLibrary
         imagePicker.videoMaximumDuration = 10
         imagePicker.mediaTypes = ["public.movie"]
         return imagePicker
@@ -73,6 +73,10 @@ class GifsCollectionViewController: UICollectionViewController, UICollectionView
         let gif = gifController.gifs[indexPath.item]
         showSelectionSheet(gif: gif)
         
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let screenSize = UIScreen.main.bounds.size
+        return CGSize(width: screenSize.width / 2 - 10, height: screenSize.height / 2)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
