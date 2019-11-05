@@ -5,3 +5,6 @@ Gif Maker is a simple app that does one thing: convert video to gifs for easy st
 1. clone the project
 2. run pod install to install the pods in pod file
 3. build and test *please build it on a device, the app does not work well on simulator due to image processing
+
+# Video Demo
+https://www.youtube.com/watch?v=BueHR_hNMFQ
