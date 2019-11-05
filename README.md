@@ -1,5 +1,5 @@
 # GifMaker
-will update how to use in here
+Gif Maker is a simple app that does one thing: convert video to gifs for easy storing and sharing. With the power of CoreGraphic and AVKit, users can make short gifs from their videos and send them to friends as emojis.
 
 # Quick Start
 1. clone the project
